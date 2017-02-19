@@ -2,6 +2,7 @@ package com.sameperson.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -21,6 +22,7 @@ public class Application extends ApplicationAdapter {
 	private SpriteBatch batch;
 
     private Rectangle bucket;
+    private Vector3 touchPosition;
 
 
     @Override
@@ -62,12 +64,18 @@ public class Application extends ApplicationAdapter {
         batch.end();
 
         if(Gdx.input.isTouched()) {
-            Vector3 touchPosition = new Vector3();
+            touchPosition = new Vector3();
             touchPosition.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPosition);
             bucket.x = touchPosition.x - 32;
         }
-
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && bucket.x > 0) {
+            bucket.x -= 300 * Gdx.graphics.getDeltaTime();
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && bucket.x < Gdx.graphics.getWidth() - 64) {
+            System.out.println(Gdx.graphics.getWidth());
+            bucket.x += 300 * Gdx.graphics.getDeltaTime();
+        }
 	}
 	
 	@Override
