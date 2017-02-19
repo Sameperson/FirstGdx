@@ -9,20 +9,29 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
+
+import java.util.Iterator;
 
 public class Application extends ApplicationAdapter {
+    //Assets
 	private Texture bucketImage;
     private Texture dropletImage;
     private Music rainBackgroundSound;
     private Sound dropSound;
-
+    //Camera and Batch
     private OrthographicCamera camera;
 	private SpriteBatch batch;
-
+    //Rectangles
     private Rectangle bucket;
+    private Array<Rectangle> raindrops;
+    //etc.
     private Vector3 touchPosition;
+    private long lastDropTime;
 
 
     @Override
@@ -47,6 +56,8 @@ public class Application extends ApplicationAdapter {
 
 		batch = new SpriteBatch();
 
+        raindrops = new Array<Rectangle>();
+        spawnRaindrop();
     }
 
 	@Override
@@ -61,6 +72,9 @@ public class Application extends ApplicationAdapter {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(bucketImage, bucket.x, bucket.y);
+        for(Rectangle raindrop : raindrops) {
+            batch.draw(dropletImage, raindrop.x, raindrop.y);
+        }
         batch.end();
 
         if(Gdx.input.isTouched()) {
@@ -76,10 +90,32 @@ public class Application extends ApplicationAdapter {
             System.out.println(Gdx.graphics.getWidth());
             bucket.x += 300 * Gdx.graphics.getDeltaTime();
         }
+
+        if(TimeUtils.nanoTime() - lastDropTime > 1000000000) {
+            spawnRaindrop();
+        }
+        Iterator<Rectangle> iterator = raindrops.iterator();
+        while(iterator.hasNext()) {
+            Rectangle raindrop = iterator.next();
+            raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
+            if(raindrop.y + 64 < 0) {
+                iterator.remove();
+            }
+        }
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
 	}
+
+	private void spawnRaindrop() {
+	    Rectangle raindrop = new Rectangle();
+        raindrop.x = MathUtils.random(0, 800 - 64);
+        raindrop.y = 480;
+        raindrop.width = 64;
+        raindrop.height = 64;
+        raindrops.add(raindrop);
+        lastDropTime = TimeUtils.nanoTime();
+    }
 }
