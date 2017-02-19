@@ -7,6 +7,10 @@ import com.sameperson.game.Application;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.title = "First Gdx";
+		config.width = 800;
+		config.height = 480;
+        config.resizable = false;
 		new LwjglApplication(new Application(), config);
 	}
 }
