@@ -6,8 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Drops extends Game {
 
-    SpriteBatch batch;
-    BitmapFont font;
+    public SpriteBatch batch;
+    public BitmapFont font;
+    public GameScreen gameScreen;
 
     @Override
     public void create() {
@@ -25,5 +26,6 @@ public class Drops extends Game {
     public void dispose() {
         batch.dispose();
         font.dispose();
+        gameScreen.dispose();
     }
 }

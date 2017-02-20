@@ -37,8 +37,9 @@ public class GameScreen implements Screen {
     private long lastDropTime;
     private int dropsGathered;
 
-    GameScreen(Drops game) {
+    public GameScreen(Drops game) {
         this.game = game;
+        this.game.gameScreen = this;
 
         Gdx.app.setLogLevel(com.badlogic.gdx.Application.LOG_DEBUG);
 
@@ -83,10 +84,10 @@ public class GameScreen implements Screen {
         game.batch.end();
 
         if (Gdx.input.isTouched()) {
-            Vector3 touchPos = new Vector3();
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            camera.unproject(touchPos);
-            bucket.x = touchPos.x - 64 / 2;
+            touchPosition = new Vector3();
+            touchPosition.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touchPosition);
+            bucket.x = touchPosition.x - 64 / 2;
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && bucket.x > 0) {
